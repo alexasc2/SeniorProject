@@ -1,18 +1,43 @@
+/* Main Script for MaRker
+ * 
+ * Reminder: Set the API Compatability Level in Unity (Under Opimization) to .NET 2.0, NOT .NET 2.0 Subset
+ * 
+ */
+
 using UnityEngine;
-using System;
+using System.Collections;
+using System.IO.Ports;
+using System.Threading;
 
-public class Integrator
+public class Integrator : MonoBehaviour
 {
-    public static SerialPort sp = new SerialPort()
-    void Initialize()
+    //SerialPort takes two arguments: Path, baudRate
+    public static SerialPort sp = new SerialPort("", 9600); 
+
+    void Start()
     {
-        
+        //Port assert
+        Debug.Assert(sp != null);
+
+        if (!sp.IsOpen)
+        {
+            print("New Port");
+            sp.Open();
+            sp.ReadTimeout = 500;
+        }
+        else
+        {
+            print("Port is already open!");
+        }
     }
 
-    void Send(int Signal)
+    void Send(int AssetID)
     {
 
     }
 
-    void Move(int )
+    void Quit()
+    {
+        sp.Close();
+    }
 }
