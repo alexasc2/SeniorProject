@@ -11,7 +11,7 @@ using System.Threading;
 
 public class Integrator : MonoBehaviour
 {
-    //SerialPort takes two arguments: Path, baudRate
+    //SerialPort takes two arguments: Path, baud rate
     public static SerialPort sp = new SerialPort("", 9600); 
 
     void Start()
