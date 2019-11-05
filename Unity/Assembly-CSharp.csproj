@@ -56,7 +56,7 @@
      <Compile Include="Assets\MaRker Script\ImageHandler.cs" />
      <Compile Include="Assets\MaRker Script\Integrator.cs" />
      <Compile Include="Assets\MaRker Script\Module.cs" />
-     <Compile Include="Assets\MaRker Script\ModuleInspector.cs" />
+     <Compile Include="Assets\MaRker Script\ModuleWindow.cs" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>C:/Users/Alex/Documents/GitHub/SeniorProject/Unity/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
