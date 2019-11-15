@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Ports;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
@@ -14,6 +16,20 @@ public class ModuleWindow : EditorWindow
     int indexer = 0;
     object image;
 
+    /* Asset Load
+     * texWidth should always be 1
+     * texHeight should be the length of the NeoPixel Arrays;
+     */
+    Texture2D pattern;
+    int texWidth = 1;
+    int texHeight;
+
+    /* Port Communication
+     * 
+     */
+    SerialPort sp = new SerialPort("", 9600);
+
+
     //Test Variables
     string[] test = { "None","1", "2", "3" };
 
@@ -24,6 +40,11 @@ public class ModuleWindow : EditorWindow
         ModuleWindow window = EditorWindow.GetWindow<ModuleWindow>("Module");
         window.position = new Rect(0, 0, 180, 80);
         window.Show();
+    }
+
+    void Start()
+    {
+
     }
 
     void OnGUI()
@@ -59,15 +80,55 @@ public class ModuleWindow : EditorWindow
             EditorGUILayout.LabelField("Pixel Color (Monotone Pattern Only): ");
             pixelColor = EditorGUILayout.ColorField(pixelColor);
         }
+
+        pattern = (Texture2D)EditorGUILayout.ObjectField("Pattern: ",
+                                                         pattern,
+                                                         typeof(Texture2D),
+                                                         false
+                                                         );
+        if (GUILayout.Button("Load Pattern"))
+        {
+            if (!pattern)
+            {
+                ImageParse();
+            }
+        }
     }
 
     void OnInspectorUpdate()
     {
+        UpdateArduino();
         Repaint();
     }
 
-    void ImageParse(object img)
+    void ImageParse()
     {
+        int x = 0;
+        int y = 0;
+        Color[] pixelData = pattern.GetPixels(x, y, texWidth, texHeight);
 
+    }
+
+    void Connect()
+    {
+        if(sp.IsOpen)
+        {
+            sp.Close();
+            Debug.Log("Closing Port");
+        }else
+        {
+            if(sp != null)
+            {
+                sp.Open();
+                sp.ReadTimeout = 50;
+                Debug.Log("Opening Port");
+            }
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        sp.Close();
+        Debug.Log("Closing Port");
     }
 }
