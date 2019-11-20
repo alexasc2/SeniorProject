@@ -7,7 +7,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
 
-
 public class ModuleWindow : EditorWindow
 {
     /* Common variables
@@ -17,6 +16,7 @@ public class ModuleWindow : EditorWindow
     Color pixelColor;
     int indexer = 0;
     object image;
+
 
     /* Asset Load
      * texWidth should always be 1
@@ -30,21 +30,16 @@ public class ModuleWindow : EditorWindow
      * 
      */
     SerialPort sp = new SerialPort("COM7");
-    string[] portNames;
     
 
     //Test Variables
     string[] test = { "None","1", "2", "3" };
+    string testS;
 
 
     [MenuItem("Window/Module")]
     static void Init()
     {
-        portNames =  SerialPort.GetPortNames();
-        for (int i = 0; i <portNames.Length; i++)
-        {
-            Debug.Log(portNames[i]);
-        }
         ModuleWindow window = EditorWindow.GetWindow<ModuleWindow>("Module");
         window.position = new Rect(0, 0, 180, 80);
         window.Show();
@@ -106,6 +101,18 @@ public class ModuleWindow : EditorWindow
         }
     }
 
+    void Update()
+    {
+        testS = sp.ReadLine();
+        if(testS != "0")
+        {
+            Debug.Log(testS);
+        }
+        else
+        {
+            Debug.Log("0");
+        }
+    }
     void OnInspectorUpdate()
     {
         Repaint();
