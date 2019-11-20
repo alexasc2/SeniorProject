@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Management;
 using System.IO.Ports;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
+
 
 public class ModuleWindow : EditorWindow
 {
@@ -27,8 +29,9 @@ public class ModuleWindow : EditorWindow
     /* Port Communication
      * 
      */
-    SerialPort sp = new SerialPort("", 9600);
-
+    SerialPort sp = new SerialPort("COM7");
+    string[] portNames;
+    
 
     //Test Variables
     string[] test = { "None","1", "2", "3" };
@@ -37,14 +40,14 @@ public class ModuleWindow : EditorWindow
     [MenuItem("Window/Module")]
     static void Init()
     {
+        portNames =  SerialPort.GetPortNames();
+        for (int i = 0; i <portNames.Length; i++)
+        {
+            Debug.Log(portNames[i]);
+        }
         ModuleWindow window = EditorWindow.GetWindow<ModuleWindow>("Module");
         window.position = new Rect(0, 0, 180, 80);
         window.Show();
-    }
-
-    void Start()
-    {
-
     }
 
     void OnGUI()
@@ -93,11 +96,18 @@ public class ModuleWindow : EditorWindow
                 ImageParse();
             }
         }
+
+        if (GUILayout.Button("Connect Module"))
+        {
+            if (!pattern)
+            {   
+                Connect();
+            }
+        }
     }
 
     void OnInspectorUpdate()
     {
-        UpdateArduino();
         Repaint();
     }
 
@@ -122,6 +132,10 @@ public class ModuleWindow : EditorWindow
                 sp.Open();
                 sp.ReadTimeout = 50;
                 Debug.Log("Opening Port");
+            }
+            else
+            {
+                Debug.Log("No Active Module");
             }
         }
     }
