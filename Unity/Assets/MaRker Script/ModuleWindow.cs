@@ -108,10 +108,6 @@ public class ModuleWindow : EditorWindow
         {
             Debug.Log(testS);
         }
-        else
-        {
-            Debug.Log("0");
-        }
     }
     void OnInspectorUpdate()
     {
