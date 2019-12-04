@@ -64,6 +64,44 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\MaRker Script\ModuleWindow.cs" />
+    <Compile Include="Assets\Uduino\Examples\Advanced\Arduino Mega\MegaReadWrite.cs" />
+    <Compile Include="Assets\Uduino\Examples\Advanced\BoardType\ChangeBoardType.cs" />
+    <Compile Include="Assets\Uduino\Examples\Advanced\Bundle\Bundle.cs" />
+    <Compile Include="Assets\Uduino\Examples\Advanced\ButtonTrigger\ButtonTrigger.cs" />
+    <Compile Include="Assets\Uduino\Examples\Advanced\EncoderLibrary\EncoderLibrary.cs" />
+    <Compile Include="Assets\Uduino\Examples\Advanced\LedIntensity\SendLedIntensity.cs" />
+    <Compile Include="Assets\Uduino\Examples\Advanced\MultipleArduino\MultipleArduino.cs" />
+    <Compile Include="Assets\Uduino\Examples\Advanced\MultipleArduino\MultipleArduino2.cs" />
+    <Compile Include="Assets\Uduino\Examples\Advanced\OneLineRead\OneLineRead.cs" />
+    <Compile Include="Assets\Uduino\Examples\Advanced\ReadSensor\ReadSensor.cs" />
+    <Compile Include="Assets\Uduino\Examples\Advanced\SendCommandToArduino\SendCommandToArduino.cs" />
+    <Compile Include="Assets\Uduino\Examples\Advanced\ServoOptimized\ServoOptimized.cs" />
+    <Compile Include="Assets\Uduino\Examples\Basic\AnalogRead\AnalogRead.cs" />
+    <Compile Include="Assets\Uduino\Examples\Basic\AnalogWrite\AnalogWrite.cs" />
+    <Compile Include="Assets\Uduino\Examples\Basic\BlinkLed\BlinkLed.cs" />
+    <Compile Include="Assets\Uduino\Examples\Basic\DigitalReadButton\DigitalReadButton.cs" />
+    <Compile Include="Assets\Uduino\Examples\Basic\DigitalReadButton\MultipleButtons\MultipleButtons.cs" />
+    <Compile Include="Assets\Uduino\Examples\Basic\Events\UduinoEventsReceiver.cs" />
+    <Compile Include="Assets\Uduino\Examples\Basic\FadeInOut\FadeInOut.cs" />
+    <Compile Include="Assets\Uduino\Examples\Basic\FadeInOut\test.cs" />
+    <Compile Include="Assets\Uduino\Examples\Basic\ReadWrite\ReadWrite.cs" />
+    <Compile Include="Assets\Uduino\Examples\Basic\Servo\Servo.cs" />
+    <Compile Include="Assets\Uduino\Examples\Basic\SimpleUduino.cs" />
+    <Compile Include="Assets\Uduino\Scripts\Boards\ArduinoBoardType.cs" />
+    <Compile Include="Assets\Uduino\Scripts\Boards\DesktopSerial\UduinoConnection_DesktopSerial.cs" />
+    <Compile Include="Assets\Uduino\Scripts\Boards\DesktopSerial\UduinoDevice_DesktopSerial.cs" />
+    <Compile Include="Assets\Uduino\Scripts\Boards\UduinoConnection.cs" />
+    <Compile Include="Assets\Uduino\Scripts\Boards\UduinoDevice.cs" />
+    <Compile Include="Assets\Uduino\Scripts\Boards\UduinoPin.cs" />
+    <Compile Include="Assets\Uduino\Scripts\Extra\Interface\Resources\BLE\UduinoInterface_Bluetooth.cs" />
+    <Compile Include="Assets\Uduino\Scripts\Extra\Interface\UduinoInterface.cs" />
+    <Compile Include="Assets\Uduino\Scripts\Extra\Interface\UduinoInterface_Serial.cs" />
+    <Compile Include="Assets\Uduino\Scripts\Extra\SimpleJSON.cs" />
+    <Compile Include="Assets\Uduino\Scripts\Extra\UduinoDebug.cs" />
+    <Compile Include="Assets\Uduino\Scripts\Extra\UduinoDebugCanvas.cs" />
+    <Compile Include="Assets\Uduino\Scripts\UduinoManager.cs" />
+    <None Include="Assets\Uduino\Arduino\libraries\Uduino\keywords.txt" />
+    <None Include="Assets\Uduino\ReadMe.txt" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/tempuser/Documents/GitHub/SeniorProject/Unity/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

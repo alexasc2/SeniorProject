@@ -6,6 +6,7 @@ using System.IO.Ports;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
+using Uduino;
 
 public class ModuleWindow : EditorWindow
 {
@@ -15,8 +16,7 @@ public class ModuleWindow : EditorWindow
     static float brightness = 50.0f;
     Color pixelColor;
     int indexer = 0;
-    object image;
-
+    Hashtable ObjectList = new Hashtable();
 
     /* Asset Load
      * texWidth should always be 1
@@ -33,14 +33,14 @@ public class ModuleWindow : EditorWindow
     
 
     //Test Variables
-    string[] test = { "None","1", "2", "3" };
+    string[] moduleList = { "None","1", "2", "3", "4", "5" };
     string testS;
 
 
-    [MenuItem("Window/Module")]
+    [MenuItem("Window/MaRker Module")]
     static void Init()
     {
-        ModuleWindow window = EditorWindow.GetWindow<ModuleWindow>("Module");
+        ModuleWindow window = EditorWindow.GetWindow<ModuleWindow>("MaRker");
         window.position = new Rect(0, 0, 180, 80);
         window.Show();
     }
@@ -51,52 +51,61 @@ public class ModuleWindow : EditorWindow
         {
             EditorGUILayout.Space();
             EditorGUILayout.Space();
-            indexer = EditorGUI.Popup(new Rect(0, 0, position.width, 20), "Module #: ", indexer, test);
+            indexer = EditorGUI.Popup(new Rect(0, 0, position.width, 20), "Module #: ", indexer, moduleList);
 
             EditorGUILayout.Space();
             EditorGUILayout.Space();
-            
-            /* Activation Control
-                * Sends Toggle Control from GUI Elements to Physical Module using GPIO pins.
-                */
-            if (GUILayout.Button("Activate Module"))
+            if (indexer != 0)
             {
-                Debug.Log("Module Activated");
+                /* Activation Control
+                    * Sends Toggle Control from GUI Elements to Physical Module using GPIO pins.
+                    */
+                if (GUILayout.Button("Activate Module"))
+                {
+                    ObjectList.Add(indexer, Selection.activeGameObject);
+                    Debug.Log("Module Activated");
+                }
+                if (GUILayout.Button("Deactivate Module"))
+                {
+                    ObjectList.Remove(indexer);
+                    Debug.Log("Module Deactivated");
+                    indexer = 0;
+                }
+
+                EditorGUILayout.Space();
+                /* Brightness control
+                    * for overall brightness of the lighting strip.
+                    */
+                EditorGUILayout.LabelField("Brightness:");
+                brightness = EditorGUILayout.Slider(brightness, 0, 100);
+
+                EditorGUILayout.Space();
+                /* Pixel Color
+                    * For monocolor pixels only.
+                    */
+                EditorGUILayout.LabelField("Pixel Color (Monotone Pattern Only): ");
+                pixelColor = EditorGUILayout.ColorField(pixelColor);
             }
 
-            EditorGUILayout.Space();
-            /* Brightness control
-                * for overall brightness of the lighting strip.
-                */
-            EditorGUILayout.LabelField("Brightness:");
-            brightness = EditorGUILayout.Slider(brightness, 0, 100);
-
-            EditorGUILayout.Space();
-            /* Pixel Color
-                * For monocolor pixels only.
-                */
-            EditorGUILayout.LabelField("Pixel Color (Monotone Pattern Only): ");
-            pixelColor = EditorGUILayout.ColorField(pixelColor);
-        }
-
-        pattern = (Texture2D)EditorGUILayout.ObjectField("Pattern: ",
-                                                         pattern,
-                                                         typeof(Texture2D),
-                                                         false
-                                                         );
-        if (GUILayout.Button("Load Pattern"))
-        {
-            if (!pattern)
+            pattern = (Texture2D)EditorGUILayout.ObjectField("Pattern: ",
+                                                             pattern,
+                                                             typeof(Texture2D),
+                                                             false
+                                                             );
+            if (GUILayout.Button("Load Pattern"))
             {
-                ImageParse();
+                if (!pattern)
+                {
+                    ImageParse();
+                }
             }
-        }
 
-        if (GUILayout.Button("Connect Module"))
-        {
-            if (!pattern)
-            {   
-                Connect();
+            if (GUILayout.Button("Connect Module"))
+            {
+                if (!pattern)
+                {
+                    Connect();
+                }
             }
         }
     }
