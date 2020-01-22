@@ -16,6 +16,7 @@ public class ModuleWindow : EditorWindow
     static float brightness = 50.0f;
     Color pixelColor;
     int indexer = 0;
+    int iterations;
     Hashtable ObjectList = new Hashtable();
 
     /* Asset Load
@@ -29,7 +30,7 @@ public class ModuleWindow : EditorWindow
     /* Port Communication
      * 
      */
-    SerialPort sp = new SerialPort("COM7");
+    SerialPort sp = new SerialPort();
     
 
     //Test Variables
@@ -110,14 +111,6 @@ public class ModuleWindow : EditorWindow
         }
     }
 
-    void Update()
-    {
-        testS = sp.ReadLine();
-        if(testS != "0")
-        {
-            Debug.Log(testS);
-        }
-    }
     void OnInspectorUpdate()
     {
         Repaint();
@@ -125,10 +118,10 @@ public class ModuleWindow : EditorWindow
 
     void ImageParse()
     {
-        int x = 0;
-        int y = 0;
-        Color[] pixelData = pattern.GetPixels(x, y, texWidth, texHeight);
-
+        if (indexer != 0)
+        {
+            UduinoManager.Instance.sendCommand("parseImage",brightness,pixelColor,iterations);
+        }
     }
 
     void Connect()
