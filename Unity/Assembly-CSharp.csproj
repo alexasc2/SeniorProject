@@ -53,6 +53,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\cui_color_picker-master\Assets\CUIColorPicker.cs" />
      <Compile Include="Assets\MaRker Script\ModuleWindow.cs" />
      <Compile Include="Assets\Uduino\Examples\Advanced\Arduino Mega\MegaReadWrite.cs" />
      <Compile Include="Assets\Uduino\Examples\Advanced\BoardType\ChangeBoardType.cs" />
