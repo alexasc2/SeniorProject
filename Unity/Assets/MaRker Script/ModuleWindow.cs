@@ -26,13 +26,27 @@ public class ModuleWindow : EditorWindow
             this.device = newDevice;
         }
     }
+
     UduinoManager u;
-    static float brightness = 50.0f;
-    int indexer = 0;
-    Modules module1 = new Modules(1, "Marker #1", false, null);
-    Modules module2 = new Modules(2, "Marker #2", false, null);
-    Modules module3 = new Modules(3, "Marker #3", false, null);
+    static float brightness = 50.0f,
+        delay = 100.0f,
+        brightnessTemp = 0,
+        delayTemp = 0;
+    int indexer = 0,
+        pixelIndexer = 0;
+    bool connected = false;
+    Color colorChoice;
+    Modules module1 = new Modules(1, "Marker#1", false, null);
+    Modules module2 = new Modules(2, "Marker#2", false, null);
+    Modules module3 = new Modules(3, "Marker#3", false, null);
     string[] moduleList = { "None", "#1", "#2", "#3" };
+    string[] pixelList = { "None", "All", "Row 1", "Row 2" };
+    bool patternGroup,
+        chase,
+        alternate,
+        breathe,
+        blink;
+
     /* 
  //Test Variables
  string[] moduleList = { "None","1", "2", "3" };
@@ -107,7 +121,7 @@ public class ModuleWindow : EditorWindow
     static void Init()
     {
         ModuleWindow window = EditorWindow.GetWindow<ModuleWindow>("MaRker");
-        window.position = new Rect(60, 60, 180, 80);
+        window.position = new Rect(60, 60, 280, 180);
         window.Show();
     }
 
@@ -127,32 +141,34 @@ public class ModuleWindow : EditorWindow
             {
                 Debug.Log("Opening Ports");
                 UduinoManager.Instance.DiscoverPorts();
+                connected = true;
             }
 
             if (GUILayout.Button("Disconnect"))
             {
                 UduinoManager.Instance.CloseAllDevices();
+                
                 Debug.Log("Closing Ports");
+                connected = false;
+                brightnessTemp = 0.0f;
+                delayTemp = 0.0f;
             }
 
-            if (GUILayout.Button("Detect Ports"))
-            {
-                UduinoManager.Instance.GetPortState();
-            }               
+            EditorGUILayout.Space();
 
-            if (indexer != 0)
+            if (indexer != 0 && connected)
             {
                 /* Activation Control
                     * Sends Toggle Control from GUI Elements to Physical Module using GPIO pins.
                     */
                 if (GUILayout.Button("Activate Module"))
                 {
-                    UduinoManager.Instance.sendCommand("activate","0"); ;
+                    UduinoManager.Instance.sendCommand("activate","1",brightness,delay);
                     Debug.Log("Module Activated");
                 }
                 if (GUILayout.Button("Deactivate Module"))
                 {
-                    UduinoManager.Instance.sendCommand("deactivate", "0"); ;
+                    UduinoManager.Instance.sendCommand("activate", "0",brightness,delay);
                     Debug.Log("Module Deactivated");
                 }
 
@@ -161,26 +177,86 @@ public class ModuleWindow : EditorWindow
                     * for overall brightness of the lighting strip.
                     */
                 EditorGUILayout.LabelField("Brightness:");
-                brightness = EditorGUILayout.Slider(brightness, 0, 100);
-                UduinoManager.Instance.sendCommand("brightness", brightness);
+                brightnessTemp = EditorGUILayout.Slider(brightness, 0, 100);
+
+                /* Delay Control
+                 * for Special Patterns
+                 */
+                EditorGUILayout.Space();
+                EditorGUILayout.LabelField("Delay(ms):");
+                delayTemp = EditorGUILayout.Slider(delay, 0, 1000);
+                if (brightness != brightnessTemp || delay != delayTemp)
+                {
+                    brightness = brightnessTemp;
+                    delay = delayTemp;
+                    UduinoManager.Instance.sendCommand("brightness", brightness);
+                    UduinoManager.Instance.sendCommand("delayControl", delay);
+                }
 
                 EditorGUILayout.Space();
                 /* Pixel Color
                     * For monocolor pixels only.
                     */
-                EditorGUILayout.LabelField("Pixel Color (Monotone Pattern Only): ");
+                //EditorGUILayout.LabelField("Pixel Color (Monotone Pattern Only): ");
+                EditorGUILayout.Space();
+                pixelIndexer = EditorGUI.Popup(new Rect(0, 210, position.width, 20), "Set Pixel Colors", pixelIndexer, pixelList);
+                EditorGUILayout.Space();
+                if (pixelIndexer != 0)
+                {
+                    EditorGUILayout.Space();
+                    EditorGUILayout.Space();
+                    colorChoice = EditorGUI.ColorField(new Rect(0, 230, position.width, 15), "New Color:", colorChoice);
+
+                    EditorGUILayout.Space();
+                    EditorGUILayout.Space();
+                    if (GUILayout.Button("Set Color"))
+                    {
+                        
+                    }
+                }
+
+                EditorGUILayout.Space();
+                patternGroup = EditorGUILayout.BeginToggleGroup("Special Patterns", patternGroup);
+                if (patternGroup)
+                {
+                    chase = EditorGUILayout.Toggle("Chase", chase);
+                    if (chase)
+                    {
+                        alternate = false;
+                        breathe = false;
+                        blink = false;
+                    }
+                    alternate = EditorGUILayout.Toggle("Alternate", alternate);
+                    if (alternate)
+                    {
+                        chase = false;
+                        breathe = false;
+                        blink = false;
+                    }
+                    breathe = EditorGUILayout.Toggle("Breathe", breathe);
+                    if (breathe)
+                    {
+                        chase = false;
+                        alternate = false;
+                        blink = false;
+                    }
+                    blink = EditorGUILayout.Toggle("Blink", blink);
+                    if (blink)
+                    {
+                        chase = false;
+                        alternate = false;
+                        breathe = false;
+                    }
+                }
+                EditorGUILayout.EndToggleGroup();
             }
+            
         }
     }
 
     void OnInspectorUpdate()
     {
         Repaint();
-    }
-
-    void SetPixel(int pixel)
-    {
-
     }
 
     void OnBoardConnected(UduinoDevice connectedDevice)
@@ -192,7 +268,8 @@ public class ModuleWindow : EditorWindow
         }
         else if (connectedDevice.name == "Marker #2")
         {
-            module2 = new Modules(2, "Marker #2", true, connectedDevice);
+            module2.Connected = true;
+            module2.device = connectedDevice;
         }
         else if (connectedDevice.name == "Marker #3")
         {
