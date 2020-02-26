@@ -121,6 +121,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 58881399}
+  - component: {fileID: 58881400}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -142,6 +143,65 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &58881400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58881398}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5a4e52dfc3107499249fb2d34a1bae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pins: []
+  activeExtentionsMap:
+    keys:
+    - UduinoDevice_DesktopSerial
+    values: 01
+  presentExtentionsMap:
+    keys:
+    - UduinoDevice_DesktopSerial
+    values: 01
+  debugLevel: 0
+  baudRate: 9600
+  limitSendRate: 0
+  readTimeout: 30
+  writeTimeout: 30
+  threadFrequency: 16
+  alwaysRead: 1
+  readAfterCommand: 1
+  skipMessageQueue: 0
+  messageQueueLength: 10
+  defaultArduinoBoardType: 0
+  useCuPort: 0
+  sendRateSpeed: 20
+  discoverTries: 10
+  autoDiscover: 1
+  delayBeforeDiscover: 0.5
+  stopAllOnQuit: 1
+  stopAllOnPause: 0
+  autoReconnect: 1
+  autoReconnectDelay: 5
+  shouldReconnect: 0
+  blackListedPorts: []
+  OnDataReceivedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBoardConnectedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBoardDisconnectedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  displayAndroidTextGUI: 0
+  autoConnectToLastDevice: 1
+  bleScanDuration: 3
+  interfaceType: 2
+  uduinoIpAddress: 192.168.x.x
+  uduinoWifiPort: 4222
+  isApplicationQuiting: 0
 --- !u!1 &1293228356
 GameObject:
   m_ObjectHideFlags: 0
