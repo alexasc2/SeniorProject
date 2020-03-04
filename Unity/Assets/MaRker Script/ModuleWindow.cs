@@ -17,7 +17,8 @@ public class ModuleWindow : EditorWindow
         brightnessTemp = 0,
         delayTemp = 0;
     int indexer = 0,
-        pixelIndexer = 0;
+        pixelIndexer = 0,
+        pattern = 0;
     bool connected = false;
     Color colorChoice;
     Dictionary<int,Modules> mList = new Dictionary<int,Modules>()
@@ -27,13 +28,14 @@ public class ModuleWindow : EditorWindow
         {3,new Modules("Marker#3", false, null)}
     };
 
-    string[] moduleList = { "None", "Marker#1", "Marker#2", "Marker#3" };
     string[] pixelList = { "None", "All", "Row 1", "Row 2" };
     bool patternGroup,
         chase,
         alternate,
         breathe,
         blink;
+    bool progGroup;
+    MonoScript prog;
 
     /*
      * MaRker Window Creation
@@ -129,6 +131,10 @@ public class ModuleWindow : EditorWindow
                 if (GUILayout.Button("Activate Module"))
                 {
                     UduinoManager.Instance.sendCommand("activate","1",brightness,delay);
+                    UduinoManager.Instance.sendCommand("brightness", brightness);
+                    UduinoManager.Instance.sendCommand("delayControl", delay);
+                    UduinoManager.Instance.sendCommand("color", (int)Mathf.CeilToInt(colorChoice[0] * 255), (int)Mathf.CeilToInt(colorChoice[1] * 255), (int)Mathf.CeilToInt(colorChoice[2] * 255));
+                    UduinoManager.Instance.sendCommand("pattern", pattern);
                     Debug.Log("Module Activated");
                 }
                 if (GUILayout.Button("Deactivate Module"))
@@ -156,6 +162,7 @@ public class ModuleWindow : EditorWindow
                     delay = delayTemp;
                     UduinoManager.Instance.sendCommand("brightness", brightness);
                     UduinoManager.Instance.sendCommand("delayControl", delay);
+                    UduinoManager.Instance.sendCommand("color", (int)Mathf.CeilToInt(colorChoice[0] * 255), (int)Mathf.CeilToInt(colorChoice[1] * 255), (int)Mathf.CeilToInt(colorChoice[2] * 255));
                 }
 
                 EditorGUILayout.Space();
@@ -164,32 +171,24 @@ public class ModuleWindow : EditorWindow
                     */
                 //EditorGUILayout.LabelField("Pixel Color (Monotone Pattern Only): ");
                 EditorGUILayout.Space();
-                pixelIndexer = EditorGUI.Popup(new Rect(0, 210, position.width, 20), "Set Pixel Colors", pixelIndexer, pixelList);
-                EditorGUILayout.Space();
-                if (pixelIndexer != 0)
-                {
-                    EditorGUILayout.Space();
-                    EditorGUILayout.Space();
-                    colorChoice = EditorGUI.ColorField(new Rect(0, 230, position.width, 15), "New Color:", colorChoice);
-
-                    EditorGUILayout.Space();
-                    EditorGUILayout.Space();
-                    if (GUILayout.Button("Set Color"))
-                    {
-                        
-                    }
-                }
+                pixelIndexer = EditorGUILayout.Popup("Choose Pixel Color",pixelIndexer, pixelList);
 
                 EditorGUILayout.Space();
-                patternGroup = EditorGUILayout.BeginToggleGroup("Special Patterns", patternGroup);
+                colorChoice = EditorGUILayout.ColorField("New Color:", colorChoice);
+
+                //Special Patterns
+                EditorGUILayout.Space();
+                patternGroup = EditorGUILayout.BeginToggleGroup("Enable Special Patterns", patternGroup);
                 if (patternGroup)
                 {
+                    pattern = 0;
                     chase = EditorGUILayout.Toggle("Chase", chase);
                     if (chase)
                     {
                         alternate = false;
                         breathe = false;
                         blink = false;
+                        pattern = 1;
                     }
                     alternate = EditorGUILayout.Toggle("Alternate", alternate);
                     if (alternate)
@@ -197,6 +196,7 @@ public class ModuleWindow : EditorWindow
                         chase = false;
                         breathe = false;
                         blink = false;
+                        pattern = 2;
                     }
                     breathe = EditorGUILayout.Toggle("Breathe", breathe);
                     if (breathe)
@@ -204,6 +204,7 @@ public class ModuleWindow : EditorWindow
                         chase = false;
                         alternate = false;
                         blink = false;
+                        pattern = 3;
                     }
                     blink = EditorGUILayout.Toggle("Blink", blink);
                     if (blink)
@@ -211,9 +212,30 @@ public class ModuleWindow : EditorWindow
                         chase = false;
                         alternate = false;
                         breathe = false;
+                        pattern = 4;
+                    }
+                    UduinoManager.Instance.sendCommand("pattern", pattern);
+                    if (GUILayout.Button("Set Pattern"))
+                    {
+                        Debug.Log(pattern);
                     }
                 }
+                else
+                {
+                    pattern = 0;
+                }
                 EditorGUILayout.EndToggleGroup();
+
+                //Programmable Activation
+                progGroup = EditorGUILayout.BeginToggleGroup("Enable Programmable Activation", progGroup);
+                if (progGroup)
+                {
+                    prog = (MonoScript)EditorGUILayout.ObjectField(prog, typeof(MonoScript), false);
+
+                }
+                EditorGUILayout.EndToggleGroup();
+
+
             }
             
         }
@@ -232,6 +254,11 @@ public class ModuleWindow : EditorWindow
             {
                 i.Value.Connected = true;
                 i.Value.device = connectedDevice;
+            }
+            else
+            {
+                i.Value.Connected = false;
+                i.Value.device = null;
             }
         }
     }
